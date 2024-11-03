@@ -1,101 +1,111 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
 
-export default function Home() {
+function Nav() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState({ name: "", email: "", profilePicture: "" });
+
+  useEffect(() => {
+    // Retrieve user data from localStorage
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (userInfo) {
+      setUser(userInfo);
+    }
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    document.body.style.overflow = isMenuOpen ? "unset" : "hidden";
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = "unset";
+  };
+
+  const navItems = [
+    { href: "/register", label: "Register" },
+    { href: "/login", label: "Login" }
+  ];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="bg-black min-h-screen text-white">
+      {/* Navbar */}
+      <div className="container mx-auto px-4 py-4 shadow-lg border-b border-gray-800">
+        <div className="flex items-center h-16 lg:h-20">
+          <button
+            onClick={toggleMenu}
+            className={`rounded-lg text-gray-400 transition duration-200 ${
+              isMenuOpen ? "hover:text-white bg-transparent" : "hover:text-white hover:bg-transparent"
+            } focus:outline-none focus:ring-2`}
+            aria-label="Toggle menu"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-6 h-6" />}
+          </button>
+          <div className="flex-1 flex justify-center lg:justify-start lg:ml-8">
+            <Link href="/" className="flex items-center space-x-1">
+              <span className="text-2xl font-bold tracking-tight">Logo</span>
+            </Link>
+          </div>
+          <nav className="hidden lg:flex items-center justify-end">
+            <ul className="flex space-x-6">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="px-4 py-2 font-extrabold text-[20px] hover:text-gray-300 hover:bg-gray-800 rounded-lg transition duration-200"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </div>
+
+      {/* User Profile Display */}
+      <div className="flex justify-center items-center min-h-[70vh]">
+        <div className="bg-white p-8 rounded-xl shadow-lg w-80 text-center">
+          <img
+            src={user.profilePicture}
+            alt={`${user.name}'s profile`}
+            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-black"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <h1 className="text-xl font-semibold text-black mb-2">{user.name}</h1>
+          <p className="text-sm text-black mb-4">{user.email}</p>
+          <button className="bg-black text-white py-2 fs-bold px-6 rounded-full mt-4 hover:bg-gray-800 transition">
+            Edit Profile
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={closeMenu}>
+          <div
+            className="absolute inset-y-0 left-0 w-72 bg-gray-900 transform transition-transform duration-300 ease-in-out"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <nav className="flex-1 py-6 space-y-1 ml-5 mt-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block px-5 py-2 text-base font-bold text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition duration-200"
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+export default Nav;
