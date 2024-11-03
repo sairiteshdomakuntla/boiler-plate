@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { FcGoogle } from "react-icons/fc";
-import { LiaApple } from "react-icons/lia";
+// import { FcGoogle } from "react-icons/fc";
+// import { LiaApple } from "react-icons/lia";
 import "animate.css";
 
 function RegisterPage() {
