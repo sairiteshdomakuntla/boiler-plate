@@ -25,27 +25,26 @@ export function signInWithGoogle() {
     .then((result) => {
       const user = result.user;
       console.log("Logged in user:", user);
+      // User is signed in
       return user;
     })
     .catch((error) => {
       console.error("Error during sign-in:", error.code, error.message);
-      throw error;
+      throw error; // Re-throw to handle in the calling function
     });
 }
 
-// Monitor auth state and handle login state
+// Monitor auth state and redirect upon successful login
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    const userInfo = {
+    // Store user info if needed
+    localStorage.setItem("userInfo", JSON.stringify({
       name: user.displayName,
       email: user.email,
-      profilePicture: user.photoURL,
-    };
-    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      profilePicture: user.photoURL
+    }));
 
-    // Redirect to homepage only if not already there
-    if (window.location.pathname !== "/") {
-      window.location.href = "/";
-    }
+    // Redirect to the app/page
+    window.location.href = "/"; // Redirect to the home page
   }
 });

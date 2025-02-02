@@ -3,25 +3,20 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
-interface User {
-  name: string;
-  email: string;
-  profilePicture: string;
-}
-
 function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<User>({ name: "", email: "", profilePicture: "" });
+  const [user, setUser] = useState({ name: "", email: "", profilePicture: "" });
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-    if (userInfo && Object.keys(userInfo).length) {
+    // Retrieve user data from localStorage
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (userInfo) {
       setUser(userInfo);
     }
   }, []);
 
   const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
+    setIsMenuOpen(!isMenuOpen);
     document.body.style.overflow = isMenuOpen ? "unset" : "hidden";
   };
 
@@ -32,11 +27,12 @@ function Nav() {
 
   const navItems = [
     { href: "/register", label: "Register" },
-    { href: "/login", label: "Login" },
+    { href: "/login", label: "Login" }
   ];
 
   return (
     <div className="bg-black min-h-screen text-white">
+      {/* Navbar */}
       <div className="container mx-auto px-4 py-4 shadow-lg border-b border-gray-800">
         <div className="flex items-center h-16 lg:h-20">
           <button
@@ -45,7 +41,6 @@ function Nav() {
               isMenuOpen ? "hover:text-white bg-transparent" : "hover:text-white hover:bg-transparent"
             } focus:outline-none focus:ring-2`}
             aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -71,6 +66,7 @@ function Nav() {
         </div>
       </div>
 
+      {/* User Profile Display */}
       <div className="flex justify-center items-center min-h-[70vh]">
         <div className="bg-white p-8 rounded-xl shadow-lg w-80 text-center">
           <img
@@ -86,6 +82,7 @@ function Nav() {
         </div>
       </div>
 
+      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={closeMenu}>
           <div
